@@ -1,7 +1,7 @@
 package DTO;
 
-public enum types {
+public enum Types {
 	Retailer,
 	Consumer,
-	Charitable_Organization
+	Charity
 }

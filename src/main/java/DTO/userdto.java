@@ -7,12 +7,12 @@ public class userdto {
     private String name;
     private String email;
     private String password;
-    private types userType;
+    private Types userType;
 //    private boolean isSubscribe;
 //    private NotificationMethod notificationMethod;
 
     // Constructor
-    public userdto(String name, String email, String password, types userType) {
+    public userdto(String name, String email, String password, Types userType) {
         this.name = name;
         this.email = email;
         this.password=password;
@@ -20,7 +20,7 @@ public class userdto {
         //this.isSubscribe=isSubscribe;
     }
 
-    public userdto(String name, String email,types userType) {
+    public userdto(String name, String email,Types userType) {
     	this.name = name;
         this.email = email;
         this.userType = userType;
@@ -63,11 +63,11 @@ public class userdto {
         this.password = password;
     }
 
-    public types getUserType() {
+    public Types getUserType() {
         return userType;
     }
 
-    public void setUserType(types userType) {
+    public void setUserType(Types userType) {
         this.userType = userType;
     }
     
