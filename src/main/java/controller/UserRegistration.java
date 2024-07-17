@@ -1,6 +1,8 @@
-import DB.DBconnection;
-import DTO.Types;
-import DTO.userdto;
+package controller;
+
+import db.DBconnection;
+import dto.Types;
+import dto.userdto;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
-@WebServlet("/UserRegistration")
+@WebServlet("/Controller.UserRegistration")
 public class UserRegistration extends HttpServlet {
     private static final long serialVersionUID = 1L;
 

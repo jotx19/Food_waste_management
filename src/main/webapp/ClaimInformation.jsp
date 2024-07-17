@@ -120,7 +120,7 @@
     <!-- Main content container -->
     <div class="container">
         <!-- Donation items table -->
-        <h2>Donation Items Available for Claim</h2>
+        <h2>Donation model.Items Available for Claim</h2>
         <table>
             <tr>
                 <th>Item Name</th>

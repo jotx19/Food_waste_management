@@ -1,4 +1,6 @@
-import DB.DBconnection;
+package controller;
+
+import db.DBconnection;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,7 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@WebServlet("/LoginServlet")
+@WebServlet("/Controller.LoginServlet")
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
