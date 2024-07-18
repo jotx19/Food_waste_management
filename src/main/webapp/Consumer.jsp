@@ -9,8 +9,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-/*            background-color: #f9f9f9;*/
-            background-image: url('./css/food.jpeg');
+            background-color: #f9f9f9;
         }
 
        
@@ -143,7 +142,7 @@
         Statement st = null;
         ResultSet rs = null;
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/fwrp", "root", "Ar@200703");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/food", "root", "root");
             st = connection.createStatement();
             String query = "SELECT * FROM Inventory WHERE isDonation = 0";
             rs = st.executeQuery(query);

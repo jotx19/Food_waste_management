@@ -157,7 +157,7 @@ tr:nth-child(even) {
             Statement st = null;
             ResultSet rs = null;
             try {
-                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/fwrp", "root", "Ar@200703");
+                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/food", "root", "root");
                 st = connection.createStatement();
                 String query = "SELECT * FROM Inventory";
                 rs = st.executeQuery(query);

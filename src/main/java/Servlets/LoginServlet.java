@@ -19,7 +19,9 @@ public class LoginServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String email = request.getParameter("email");
-        String password = request.getParameter("password"); // In real application, password should be hashed
+        String password = request.getParameter("password");
+
+        System.out.println("Authenticating user: " + email);
 
         String userType = authenticateUser(email, password);
         if (userType != null) {
@@ -37,6 +39,7 @@ public class LoginServlet extends HttpServlet {
                     break;
             }
         } else {
+            System.out.println("Authentication failed for user: " + email);
             response.sendRedirect("login.jsp?error=true"); // Redirect back to login page with error
         }
     }
@@ -52,22 +55,30 @@ public class LoginServlet extends HttpServlet {
 
     private String authenticateUser(String email, String password) {
         // Use DatabaseUtil to establish database connection
-        try (Connection connection = DBconnection.getConnection();
-             // Prepare a statement to prevent SQL injection
-             PreparedStatement statement = connection.prepareStatement("SELECT userType FROM Users WHERE email = ? AND password = ?")) {
-            statement.setString(1, email);
-            statement.setString(2, password); // In real application, use hashed password
+        try (Connection connection = DBconnection.getConnection()) {
+            if (connection == null) {
+                System.err.println("Failed to obtain database connection");
+                return null;
+            }
+            System.out.println("Database connection obtained");
 
-            try (ResultSet resultSet = statement.executeQuery()) {
-                // Check if the result set has any rows
-                if (resultSet.next()) {
-                    return resultSet.getString("userType");
+            // Prepare a statement to prevent SQL injection
+            try (PreparedStatement statement = connection.prepareStatement("SELECT userType FROM Users WHERE email = ? AND password = ?")) {
+                statement.setString(1, email);
+                statement.setString(2, password); // In real application, use hashed password
+
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    // Check if the result set has any rows
+                    if (resultSet.next()) {
+                        return resultSet.getString("userType");
+                    } else {
+                        System.out.println("User not found: " + email);
+                    }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        // Return null if authentication fails
         return null;
     }
 }

@@ -1,7 +1,10 @@
 DTO\userdto.class
-Items.class
-LoginServlet.class
 DTO\Types.class
-UserRegistration$1.class
-UserRegistration.class
+Servlets\UserRegistration$1.class
+Servlets\UserRegistration.class
+DAO\InventoryDAO$PreparedStatementSetter.class
+Servlets\LoginServlet.class
+DAO\InventoryDAO.class
+DAO\UserDAO.class
 DB\DBconnection.class
+Models\Items.class
