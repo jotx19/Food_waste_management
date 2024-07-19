@@ -20,17 +20,19 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            
         }
 
         .login-container {
+            background: rgba(30, 20, 23, 0.2);
+            backdrop-filter: blur(50px);
             width: 400px;
             height:350px;
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+            /*background-color: rgba(255, 255, 255, 0.8);*/ 
             border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 10px 4px 10px rgba(0, 0, 0, 0.2);
             text-align: center;
-            backdrop-filter: blur(10px);
         }
 
         h2 {

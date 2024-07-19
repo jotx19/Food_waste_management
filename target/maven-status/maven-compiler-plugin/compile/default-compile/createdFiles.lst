@@ -1,8 +1,11 @@
 DTO\userdto.class
+DAOImpl\InventoryDAOImpl.class
 DTO\Types.class
 Servlets\UserRegistration$1.class
 Servlets\UserRegistration.class
-DAO\InventoryDAO$PreparedStatementSetter.class
+Servlets\InventoryServlet.class
+DAO\UserDAOImpl.class
+DAOImpl\InventoryDAOImpl$PreparedStatementSetter.class
 Servlets\LoginServlet.class
 DAO\InventoryDAO.class
 DAO\UserDAO.class
