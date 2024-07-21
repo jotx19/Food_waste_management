@@ -1,9 +1,10 @@
 package Servlets;
 
 import DAO.UserDAO;
-import DAO.UserDAOImpl;
+import DAOImpl.UserDAOImpl;
 import DTO.Types;
 import DTO.userdto;
+import Models.Passwordvalidator;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -16,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/UserRegistration")
 public class UserRegistration extends HttpServlet {
-    private static final long serialVersionUID = 1L;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -30,6 +30,13 @@ public class UserRegistration extends HttpServlet {
             userType = Types.valueOf(userTypeString);
         } else {
             userType = Types.Consumer; // Default value
+        }
+
+        // Validate password
+        if (!Passwordvalidator.validate(password)) {
+            request.setAttribute("error", "Password must be at least 8 characters and meet the specified requirements.");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
         }
 
         userdto user = new userdto(name, email, password, userType);
@@ -46,10 +53,10 @@ public class UserRegistration extends HttpServlet {
         if (userId > 0) {
             switch (userType) {
                 case Retailer:
-                    request.getRequestDispatcher("/InventoryItem.jsp").forward(request, response);
+                    request.getRequestDispatcher("/Inventory-retailer.jsp").forward(request, response);
                     break;
                 case Charity:
-                    request.getRequestDispatcher("/ClaimInformation.jsp").forward(request, response);
+                    request.getRequestDispatcher("/Claim-charity.jsp").forward(request, response);
                     break;
                 default:
                     request.getRequestDispatcher("/Consumer.jsp").forward(request, response);
@@ -57,7 +64,6 @@ public class UserRegistration extends HttpServlet {
             }
         } else {
             System.out.println("User not created.");
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "User not created.");
         }
     }
 }

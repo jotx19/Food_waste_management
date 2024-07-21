@@ -31,18 +31,18 @@ public class ClaimDAOImpl implements ClaimDAO {
     }
 
     @Override
-    public boolean addOrUpdateClaim(Claims claim) {
-        if (existsClaimForItem(claim.getItemId())) {
+    public boolean addOrUpdate(Claims claim) {
+        if (existingClaim(claim.getItemId())) {
             int currentQuantityClaimed = getQuantityClaimed(claim.getItemId());
             int newQuantityClaimed = currentQuantityClaimed + claim.getQuantityClaimed();
-            return updateQuantityClaimed(claim.getItemId(), newQuantityClaimed);
+            return updateQuantity(claim.getItemId(), newQuantityClaimed);
         } else {
             return addClaim(claim);
         }
     }
 
     @Override
-    public boolean existsClaimForItem(int itemId) {
+    public boolean existingClaim(int itemId) {
         String query = "SELECT COUNT(*) AS count FROM Claims WHERE ItemID = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, itemId);
@@ -59,7 +59,7 @@ public class ClaimDAOImpl implements ClaimDAO {
     }
 
     @Override
-    public boolean updateQuantityClaimed(int itemId, int quantityClaimed) {
+    public boolean updateQuantity(int itemId, int quantityClaimed) {
         String query = "UPDATE Claims SET QuantityClaimed = ? WHERE ItemID = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, quantityClaimed);

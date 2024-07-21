@@ -206,7 +206,7 @@
         Statement st = null;
         ResultSet rs = null;
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/food", "root", "root");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/fwrp", "root", "root");
             st = connection.createStatement();
             String query = "SELECT * FROM Inventory WHERE isDonation = 0";
             rs = st.executeQuery(query);
@@ -220,7 +220,7 @@
             <td><%=rs.getString(5)%></td>
             <td><%=rs.getString("discountPrice")%></td>
             <td>
-                <form id="purchaseForm<%=rs.getString(1)%>" action="CustomerServlet" method="post">
+                <form id="purchaseForm<%=rs.getString(1)%>" action="Consumers" method="post">
                     <input type="hidden" name="action" value="purchase">
                     <input type="hidden" name="itemId" value="<%=rs.getString(1)%>">
                     <button type="button" class="purchase-button" onclick="purchaseItem('<%=rs.getString(1)%>')">Purchase</button>

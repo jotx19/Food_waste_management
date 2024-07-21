@@ -30,10 +30,10 @@ public class LoginServlet extends HttpServlet {
             String targetPage;
             switch (userType.toLowerCase()) {
                 case "retailer":
-                    targetPage = "/InventoryItem.jsp";
+                    targetPage = "/Inventory-retailer.jsp";
                     break;
                 case "charity":
-                    targetPage = "/ClaimInformation.jsp";
+                    targetPage = "/Claim-charity.jsp";
                     break;
                 case "consumer":
                     targetPage = "/Consumer.jsp";
