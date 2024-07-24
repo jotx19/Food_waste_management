@@ -128,6 +128,7 @@
     </form>
     <br>
     <p>Create Account! <a href="./register.jsp">Registration</a></p> 
+    <p><a href="http://localhost:8080/WebApplication/">Home</a></p>
 </div>
 
 <div class="loading-overlay" id="loadingOverlay">

@@ -14,7 +14,7 @@ Models\Claims.class
 DAO\ClaimDAO.class
 DAOImpl\ClaimDAOImpl.class
 Models\Passwordvalidator.class
-Servlets\Consumer.class
+Servlets\ConsumerServlet.class
 Servlets\LoginServlet.class
 DAO\InventoryDAO.class
 DAO\UserDAO.class

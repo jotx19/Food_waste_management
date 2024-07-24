@@ -103,7 +103,7 @@ public class InventoryServlet extends HttpServlet {
         newItem.setDiscountPrice(Double.parseDouble(request.getParameter("discountPrice")));
 
         boolean itemAdded = inventoryDAO.addItemToInventory(newItem);
-        response.sendRedirect(itemAdded ? "InventoryItem.jsp" : "Failed.jsp");
+        response.sendRedirect(itemAdded ? "Inventory-retailer.jsp" : "Failed.jsp");
     }
 
     private void handleUpdateInventory(HttpServletRequest request, HttpServletResponse response)
@@ -119,7 +119,7 @@ public class InventoryServlet extends HttpServlet {
                 Boolean.parseBoolean(request.getParameter("newIsSale")),
                 Double.parseDouble(request.getParameter("newDiscountPrice"))
         );
-        response.sendRedirect(updateSuccess ? "InventoryItem.jsp" : "Error.jsp");
+        response.sendRedirect(updateSuccess ? "Inventory-retailer.jsp" : "Error.jsp");
     }
 
     private void handleDeleteInventory(HttpServletRequest request, HttpServletResponse response)
@@ -127,7 +127,7 @@ public class InventoryServlet extends HttpServlet {
         try {
             int itemId = Integer.parseInt(request.getParameter("itemId"));
             boolean deleteSuccess = inventoryDAO.deleteInventoryItem(itemId);
-            response.sendRedirect(deleteSuccess ? "InventoryItem.jsp" : "Error.jsp");
+            response.sendRedirect(deleteSuccess ? "Inventory-retailer.jsp" : "Error.jsp");
         } catch (NumberFormatException e) {
             e.printStackTrace();
             response.sendRedirect("Error.jsp");

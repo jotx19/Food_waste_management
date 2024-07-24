@@ -5,19 +5,21 @@
 <html>
 <head>
 <title>Inventory</title>
+ <link rel="stylesheet" href="https://use.typekit.net/nsf1sey.css">
+
 <style>
 body {
-    font-family: Arial, sans-serif;
+    font-family: owners;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     background-color: #fff6f6;
-/*    background-image: url('res/R.jpg'); 
-    background-size: cover; 
-    background-position: center;
-    background-repeat: no-repeat; */
+            background-image: url("res/inventory.jpg");
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat;
 }
 
 .header {
@@ -27,14 +29,14 @@ body {
     background-color: black;
     border-radius: 25px;
     padding: 10px 20px;
-    color: black;
+    color: white;
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
     height: 5vh;
     width: 90%;
     padding: 10px 15px;
-    background: rgba(30, 23, 23, 0.1);
+    background: rgba(255, 255, 255, 0.1);
     justify-content: space-between;
     align-items: center;
     backdrop-filter: blur(50px);
@@ -60,7 +62,7 @@ body {
     color: white;
 }
 .container {
-    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+/*    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;*/
 /*    display: flex;
     flex-direction: column;
     align-items: center;

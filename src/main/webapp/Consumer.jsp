@@ -59,14 +59,13 @@
         }
 
         .container {
-            font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-            max-width: 90%;
-            margin: 20px auto;
-            padding: 20px 20px;
+            margin: 80px auto 20px auto; 
+            max-width: 100%;
+            padding: 20px;
             background-color: #fff;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 10vh;
+            /*overflow-x: auto;  Handles horizontal overflow */
         }
 
         .container h1 {
@@ -85,7 +84,7 @@
 
         th, td {
             padding: 12px;
-            text-align: left;
+            text-align: center;
             border-bottom: 1px solid #ddd;
         }
 
@@ -120,45 +119,28 @@
         .footer {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            padding: 10px;
+            /*gap: 10px;*/
+            padding: 15px;
             position: fixed;
             bottom: 0;
             width: 100%;
             align-items: center;
-            left: 0;
+/*            left: 0;*/
         }
 
         .footer a {
             text-decoration: none;
             background-color: black;
             color: white;
-            padding: 10px 20px;
+            padding: 10px 30px;
             border-radius: 25px;
             transition: background-color 0.3s ease;
             text-align: center;
-            width: 7vw;
+            width: 10vw;
         }
 
         .footer a:hover {
             background-color: #e0b800;
-        }
-
-        .subscription-button {
-            background-color: #527a7a;
-            color: #fff;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            text-decoration: none;
-            margin-top: 20px;
-            display: inline-block;
-        }
-
-        .subscription-button:hover {
-            background-color: #405b5b;
         }
 
         .header-buttons {
@@ -220,7 +202,7 @@
             <td><%=rs.getString(5)%></td>
             <td><%=rs.getString("discountPrice")%></td>
             <td>
-                <form id="purchaseForm<%=rs.getString(1)%>" action="Consumers" method="post">
+                <form id="purchaseForm<%=rs.getString(1)%>" action="CustomerServlet" method="post">
                     <input type="hidden" name="action" value="purchase">
                     <input type="hidden" name="itemId" value="<%=rs.getString(1)%>">
                     <button type="button" class="purchase-button" onclick="purchaseItem('<%=rs.getString(1)%>')">Purchase</button>
