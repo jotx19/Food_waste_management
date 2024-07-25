@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface InventoryDAO {
     List<Items> getInventory();
-    boolean addItemToInventory(Items item);
-    boolean updateInventoryItem(int itemId, String newItemName, int newQuantity, Date newExpirationDate, double newRetailerPrice, boolean newIsDonation, boolean newIsSale, double newDiscountPrice);
-    boolean deleteInventoryItem(int itemId);
+    boolean addItem(Items item);
+    boolean updateItem(int itemId, String newItemName, int newQuantity, Date newExpirationDate, double newRetailerPrice, boolean newIsDonation, boolean newIsSale, double newDiscountPrice);
+    boolean deleteItem(int itemId);
     List<Items> getDonationItems();
     boolean flagSurplusItem(int surplusItemId);
-    boolean updateInventoryItemQuantity(int itemId, int newQuantity);
-    boolean decreaseInventoryItemQuantity(int itemId);
+    boolean updateQuantity(int itemId, int newQuantity);
+    boolean decreaseQuantity(int itemId);
 }

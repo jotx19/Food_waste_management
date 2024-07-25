@@ -103,17 +103,18 @@
         }
 
         .purchase-button {
-            background-color: #293d3d;
-            color: #fff;
-            padding: 8px 16px;
+            background-color: black;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 25px;
             border: none;
-            border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
 
         .purchase-button:hover {
-            background-color: #1d2929;
+            background-color: #FFBF00;
+            color:black;
         }
 
         .footer {
@@ -141,6 +142,7 @@
 
         .footer a:hover {
             background-color: #e0b800;
+            color: black;
         }
 
         .header-buttons {
@@ -181,7 +183,7 @@
             <th>Expiration Date</th>
             <th>Retailer Price</th>
             <th>Discount Price</th>
-            <th>Action</th>
+            <th>Buy</th>
         </tr>
         <%
         Connection connection = null;

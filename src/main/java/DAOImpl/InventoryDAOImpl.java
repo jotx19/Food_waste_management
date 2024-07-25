@@ -28,14 +28,14 @@ public class InventoryDAOImpl implements InventoryDAO {
     }
 
     @Override
-    public boolean addItemToInventory(Items item) {
+    public boolean addItem(Items item) {
         return executeUpdate(INSERT, ps -> {
             setItemPreparedStatement(ps, item);
         });
     }
 
     @Override
-    public boolean updateInventoryItem(int itemId, String newItemName, int newQuantity, Date newExpirationDate, double newRetailerPrice, boolean newIsDonation, boolean newIsSale, double newDiscountPrice) {
+    public boolean updateItem(int itemId, String newItemName, int newQuantity, Date newExpirationDate, double newRetailerPrice, boolean newIsDonation, boolean newIsSale, double newDiscountPrice) {
         return executeUpdate(UPDATE, ps -> {
             ps.setString(1, newItemName);
             ps.setInt(2, newQuantity);
@@ -49,7 +49,7 @@ public class InventoryDAOImpl implements InventoryDAO {
     }
 
     @Override
-    public boolean deleteInventoryItem(int itemId) {
+    public boolean deleteItem(int itemId) {
         return executeUpdate(DELETE, ps -> ps.setInt(1, itemId));
     }
 
@@ -64,7 +64,7 @@ public class InventoryDAOImpl implements InventoryDAO {
     }
 
     @Override
-    public boolean updateInventoryItemQuantity(int itemId, int newQuantity) {
+    public boolean updateQuantity(int itemId, int newQuantity) {
         return executeUpdate(UPDATE_QUANTITY, ps -> {
             ps.setInt(1, newQuantity);
             ps.setInt(2, itemId);
@@ -72,7 +72,7 @@ public class InventoryDAOImpl implements InventoryDAO {
     }
 
     @Override
-    public boolean decreaseInventoryItemQuantity(int itemId) {
+    public boolean decreaseQuantity(int itemId) {
         return executeUpdate(DECREASE_QUANTITY, ps -> ps.setInt(1, itemId));
     }
 
