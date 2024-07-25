@@ -26,11 +26,11 @@
             max-width: 500px;
             margin: 100px auto;
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+            background: rgba(30, 20, 23, 0.2);
+            backdrop-filter: blur(50px);
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
-            backdrop-filter: blur(10px);
         }
 
         h2 {
@@ -46,7 +46,7 @@
             margin: 10px 0;
             border: 1px solid #ccc;
             padding: 15px 30px; 
-            border: 1px solid black;
+            /*border: 1px solid black;*/
             border-radius: 25px;
             transition: border-color 0.3s;
         }
@@ -126,6 +126,8 @@
 
         <input type="submit" value="Register ">
     </form>
+            <p>Already have Account <a href="./login.jsp">Login</a></p> 
+
 </div>
 
 <script>

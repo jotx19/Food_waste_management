@@ -17,57 +17,71 @@ import java.sql.SQLException;
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String email = request.getParameter("email");
-        String password = request.getParameter("password"); // In real application, password should be hashed
+        String password = request.getParameter("password");
 
         String userType = authenticateUser(email, password);
         if (userType != null) {
             HttpSession session = request.getSession();
             session.setAttribute("userType", userType);
-            switch (userType) {
-                case "Retailer":
-                    request.getRequestDispatcher("/InventoryItem.jsp").forward(request, response);
+
+            String targetPage;
+            switch (userType.toLowerCase()) {
+                case "retailer":
+                    targetPage = "/Inventory-retailer.jsp";
                     break;
-                case "Charitable_Organization":
-                    request.getRequestDispatcher("/ClaimInformation.jsp").forward(request, response);
+                case "charity":
+                    targetPage = "/Claim-charity.jsp";
+                    break;
+                case "consumer":
+                    targetPage = "/Consumer.jsp";
                     break;
                 default:
-                    request.getRequestDispatcher("/Consumer.jsp").forward(request, response);
+                    targetPage = null;
                     break;
             }
+
+            if (targetPage != null) {
+                request.getRequestDispatcher(targetPage).forward(request, response);
+            } else {
+                response.sendRedirect("login.jsp?error=true");
+            }
         } else {
-            response.sendRedirect("login.jsp?error=true"); // Redirect back to login page with error
+            response.sendRedirect("login.jsp?error=true");
         }
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Handle logout
         HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate(); // Invalidate session
-        }
-        response.sendRedirect("login.jsp"); // Redirect to login page after logout
+        if (session != null) session.invalidate();
+        response.sendRedirect("login.jsp");
     }
 
     private String authenticateUser(String email, String password) {
-        // Use DatabaseUtil to establish database connection
         try (Connection connection = DBconnection.getConnection();
-             // Prepare a statement to prevent SQL injection
              PreparedStatement statement = connection.prepareStatement("SELECT userType FROM Users WHERE email = ? AND password = ?")) {
+
+            if (connection == null) {
+                System.err.println("Failed to obtain database connection");
+                return null;
+            }
+
             statement.setString(1, email);
-            statement.setString(2, password); // In real application, use hashed password
+            statement.setString(2, password);
 
             try (ResultSet resultSet = statement.executeQuery()) {
-                // Check if the result set has any rows
                 if (resultSet.next()) {
                     return resultSet.getString("userType");
+                } else {
+                    System.out.println("User not found: " + email);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        // Return null if authentication fails
         return null;
     }
 }

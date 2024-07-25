@@ -1,11 +1,14 @@
 package Servlets;
 
 import DAO.UserDAO;
+import DAOImpl.UserDAOImpl;
 import DTO.Types;
 import DTO.userdto;
+import Models.Passwordvalidator;
 import java.io.IOException;
 import java.sql.SQLException;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/UserRegistration")
 public class UserRegistration extends HttpServlet {
-    private static final long serialVersionUID = 1L;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -25,38 +27,43 @@ public class UserRegistration extends HttpServlet {
 
         Types userType = null;
         if (userTypeString != null) {
-            userType = Types.valueOf(userTypeString.replace(" ", "_"));
+            userType = Types.valueOf(userTypeString);
         } else {
             userType = Types.Consumer; // Default value
+        }
+
+        // Validate password
+        if (!Passwordvalidator.validate(password)) {
+            request.setAttribute("error", "Password must be at least 8 characters and meet the specified requirements.");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
         }
 
         userdto user = new userdto(name, email, password, userType);
         System.out.println("Registering user: " + user.getName() + ", " + user.getEmail() + ", " + user.getUserType());
 
-        UserDAO userDAO = new UserDAO();
+        UserDAO userDAO = new UserDAOImpl(); // Use the implementation class
+        int userId = 0;
         try {
-            int userId = userDAO.registerUser(user);
-            System.out.println("User ID: " + userId);
-
-            if (userId > 0) {
-                switch (userType) {
-                    case Retailer:
-                        request.getRequestDispatcher("/InventoryItem.jsp").forward(request, response);
-                        break;
-                    case Charity:
-                        request.getRequestDispatcher("/ClaimInformation.jsp").forward(request, response);
-                        break;
-                    default:
-                        request.getRequestDispatcher("/Consumer.jsp").forward(request, response);
-                        break;
-                }
-            } else {
-                System.out.println("User not created.");
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "User not created.");
+            userId = userDAO.registerUser(user);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRegistration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("User ID: " + userId);
+        if (userId > 0) {
+            switch (userType) {
+                case Retailer:
+                    request.getRequestDispatcher("/Inventory-retailer.jsp").forward(request, response);
+                    break;
+                case Charity:
+                    request.getRequestDispatcher("/Claim-charity.jsp").forward(request, response);
+                    break;
+                default:
+                    request.getRequestDispatcher("/Consumer.jsp").forward(request, response);
+                    break;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while creating the user.");
+        } else {
+            System.out.println("User not created.");
         }
     }
 }
