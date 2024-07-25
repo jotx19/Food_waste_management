@@ -16,8 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/InventoryServlet")
 public class InventoryServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-    private InventoryDAO inventoryDAO;
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");private InventoryDAO inventoryDAO;
 
     @Override
     public void init() {
@@ -38,13 +37,13 @@ public class InventoryServlet extends HttpServlet {
                 forwardToPage(request, response, "AddInventory.jsp");
                 break;
             case "update":
-                forwardToPageWithInventory(request, response, "updateInventory.jsp");
+                forwardInventory(request, response, "Update.jsp");
                 break;
             case "delete":
-                forwardToPageWithInventory(request, response, "deleteInventory.jsp");
+                forwardInventory(request, response, "");
                 break;
             case "viewSurplus":
-                forwardToPage(request, response, "surplusItem.jsp");
+                forwardToPage(request, response, "SurplusItem.jsp");
                 break;
             default:
                 forwardToPage(request, response, "InventoryItem.jsp");
@@ -61,16 +60,16 @@ public class InventoryServlet extends HttpServlet {
             try {
                 switch (action) {
                     case "add":
-                        handleAddInventory(request, response);
+                        addInventory(request, response);
                         break;
                     case "update":
-                        handleUpdateInventory(request, response);
+                        updateInventory(request, response);
                         break;
                     case "delete":
-                        handleDeleteInventory(request, response);
+                        deleteInventory(request, response);
                         break;
                     case "viewSurplus":
-                        handleViewSurplusInventory(request, response);
+                        viewSurplusInventory(request, response);
                         break;
                 }
             } catch (IOException | ParseException e) {
@@ -84,14 +83,14 @@ public class InventoryServlet extends HttpServlet {
         request.getRequestDispatcher(page).forward(request, response);
     }
 
-    private void forwardToPageWithInventory(HttpServletRequest request, HttpServletResponse response, String page)
+    private void forwardInventory(HttpServletRequest request, HttpServletResponse response, String page)
             throws ServletException, IOException {
         List<Items> inventory = inventoryDAO.getInventory();
         request.setAttribute("inventory", inventory);
         forwardToPage(request, response, page);
     }
 
-    private void handleAddInventory(HttpServletRequest request, HttpServletResponse response)
+    private void addInventory(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ParseException {
         Items newItem = new Items();
         newItem.setItemName(request.getParameter("itemName"));
@@ -102,14 +101,14 @@ public class InventoryServlet extends HttpServlet {
         newItem.setSale(Boolean.parseBoolean(request.getParameter("isSale")));
         newItem.setDiscountPrice(Double.parseDouble(request.getParameter("discountPrice")));
 
-        boolean itemAdded = inventoryDAO.addItemToInventory(newItem);
+        boolean itemAdded = inventoryDAO.addItem(newItem);
         response.sendRedirect(itemAdded ? "Inventory-retailer.jsp" : "Failed.jsp");
     }
 
-    private void handleUpdateInventory(HttpServletRequest request, HttpServletResponse response)
+    private void updateInventory(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ParseException {
         int itemId = Integer.parseInt(request.getParameter("itemId"));
-        boolean updateSuccess = inventoryDAO.updateInventoryItem(
+        boolean updateSuccess = inventoryDAO.updateItem(
                 itemId,
                 request.getParameter("newItemName"),
                 Integer.parseInt(request.getParameter("newQuantity")),
@@ -122,11 +121,11 @@ public class InventoryServlet extends HttpServlet {
         response.sendRedirect(updateSuccess ? "Inventory-retailer.jsp" : "Error.jsp");
     }
 
-    private void handleDeleteInventory(HttpServletRequest request, HttpServletResponse response)
+    private void deleteInventory(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         try {
             int itemId = Integer.parseInt(request.getParameter("itemId"));
-            boolean deleteSuccess = inventoryDAO.deleteInventoryItem(itemId);
+            boolean deleteSuccess = inventoryDAO.deleteItem(itemId);
             response.sendRedirect(deleteSuccess ? "Inventory-retailer.jsp" : "Error.jsp");
         } catch (NumberFormatException e) {
             e.printStackTrace();
@@ -134,12 +133,12 @@ public class InventoryServlet extends HttpServlet {
         }
     }
 
-    private void handleViewSurplusInventory(HttpServletRequest request, HttpServletResponse response)
+    private void viewSurplusInventory(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         try {
             int surplusItemId = Integer.parseInt(request.getParameter("itemId"));
             boolean surplusSuccess = inventoryDAO.flagSurplusItem(surplusItemId);
-            response.sendRedirect(surplusSuccess ? "surplusItem.jsp" : "Error.jsp");
+            response.sendRedirect(surplusSuccess ? "SurplusItem.jsp" : "Error.jsp");
         } catch (NumberFormatException e) {
             e.printStackTrace();
             response.sendRedirect("Error.jsp");
