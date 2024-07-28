@@ -131,4 +131,10 @@ public class InventoryDAOImpl implements InventoryDAO {
     private interface PreparedStatementSetter {
         void setValues(PreparedStatement preparedStatement) throws SQLException;
     }
+    
+    @Override
+    public boolean claimItem(int itemId){
+        Connection connection = null;
+        PreparedStatment prepareStatment = null;
+    }
 }
