@@ -135,6 +135,33 @@ public class InventoryDAOImpl implements InventoryDAO {
     @Override
     public boolean claimItem(int itemId){
         Connection connection = null;
-        PreparedStatment prepareStatment = null;
+        PreparedStatement preparedStatement = null;
+        boolean success = false;
+        
+        try {
+            connection = DBconnection.getConnection();
+            
+            // update inventory 
+            String updateQuery ="UPDATE Inventory SET Quantity = Quantity - 1 WHERE ItemID = ? AND Quantity>0";
+            preparedStatement = connection.prepareStatement(updateQuery);
+            preparedStatement.setInt(1, itemId);
+            int updateRow = preparedStatement.executeUpdate();
+            
+            success = updateRow >0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (preparedStatement != null){
+                    preparedStatement.close();
+                }
+                if (connection !=null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return success;
     }
 }
