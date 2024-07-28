@@ -40,11 +40,14 @@ public class InventoryServlet extends HttpServlet {
                 forwardInventory(request, response, "Update.jsp");
                 break;
             case "delete":
-                forwardInventory(request, response, "");
+                forwardInventory(request, response, "Delete.jsp");
                 break;
             case "viewSurplus":
                 forwardToPage(request, response, "SurplusItem.jsp");
                 break;
+            case "claim":
+                forwardInventory(request, response, "Claim-charity.jsp");
+                break;    
             default:
                 forwardToPage(request, response, "InventoryItem.jsp");
                 break;
@@ -70,6 +73,9 @@ public class InventoryServlet extends HttpServlet {
                         break;
                     case "viewSurplus":
                         viewSurplusInventory(request, response);
+                        break;
+                    case "claim":
+                        claimFood(request, response);
                         break;
                 }
             } catch (IOException | ParseException e) {
@@ -139,6 +145,17 @@ public class InventoryServlet extends HttpServlet {
             int surplusItemId = Integer.parseInt(request.getParameter("itemId"));
             boolean surplusSuccess = inventoryDAO.flagSurplusItem(surplusItemId);
             response.sendRedirect(surplusSuccess ? "SurplusItem.jsp" : "Error.jsp");
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            response.sendRedirect("Error.jsp");
+        }
+    }
+    private void claimFood(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        try {
+            int itemId = Integer.parseInt(request.getParameter("itemId"));
+            boolean claimSuccess = inventoryDAO.claimItem(itemId);
+            response.sendRedirect(claimSuccess ? "ClaimSuccess.jsp" : "ClaimFailure.jsp");
         } catch (NumberFormatException e) {
             e.printStackTrace();
             response.sendRedirect("Error.jsp");
