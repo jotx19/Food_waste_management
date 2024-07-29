@@ -15,6 +15,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Claim Surplus Food</title>
+    <link rel="stylesheet" href="https://use.typekit.net/nsf1sey.css">
     <style>
         body {
             font-family: owners;
@@ -98,6 +99,24 @@
         tr:hover {
             background-color: #ddd;
         }
+        .button {
+            text-decoration: none;
+            background-color: #FFBF00;
+            color: black;
+            padding: 10px 25px; 
+            border-radius: 25px;
+            transition: background-color 0.3s ease;
+            font-size: 14px; 
+            display: inline-block;
+        }
+        .button:hover {
+            background-color: black;
+            color: white;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -115,6 +134,7 @@
                 <th>Item Name</th>
                 <th>Quantity</th>
                 <th>Expiration Date</th>
+                <th>Donation</th>
                 <th>Action</th>
             </tr>
             <%
@@ -125,7 +145,7 @@
             try {
                 connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/fwrp", "root", "477Azadeh936@");
                 stat = connection.createStatement();
-                String query = "SELECT * FROM Inventory";
+                String query = "SELECT * FROM Inventory WHERE IsDonation = true";
                 result = stat.executeQuery(query);
                 Date currentDate = new Date();
                 while (result.next()) {
@@ -136,7 +156,15 @@
                 <td><%=result.getString("ItemID")%></td>
                 <td><%=result.getString("ItemName")%></td>
                 <td><%=result.getString("Quantity")%></td>
-                <td><%= isExpiring ? "expiring" : "" %></td>
+                <td class="<%= isExpiring ? "expiring" : "" %>"><%=sdf.format(expirationDate)%></td>
+                <td><%=result.getBoolean("IsDonation") ? "Yes" : "No" %></td>
+                <td>
+                    <form action="InventoryServlet" method="post">
+                        <input type="hidden" name="action" value="claim">
+                        <input type="hidden" name="itemId" value="<%=result.getString("ItemID")%>">
+                        <button type="submit" class="button">Claim</button>
+                    </form>
+                </td>
             </tr>
             <%
                 }
