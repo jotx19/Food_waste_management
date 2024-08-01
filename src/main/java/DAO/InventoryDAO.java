@@ -13,4 +13,5 @@ public interface InventoryDAO {
     boolean flagSurplusItem(int surplusItemId);
     boolean updateQuantity(int itemId, int newQuantity);
     boolean decreaseQuantity(int itemId);
+    boolean claimItem(int itemId);
 }
