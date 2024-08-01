@@ -127,6 +127,35 @@ public class InventoryDAOImpl implements InventoryDAO {
         stat.setDouble(7, item.getDiscountPrice());
     }
 
+    @Override
+    public boolean claimItem(int itemId){
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        boolean success = false;
+        try {
+            connection = DBconnection.getConnection();
+            // update inventory 
+            String updateQuery ="UPDATE Inventory SET Quantity = Quantity - 1 WHERE ItemID = ? AND Quantity>0";
+            preparedStatement = connection.prepareStatement(updateQuery);
+            preparedStatement.setInt(1, itemId);
+            int updateRow = preparedStatement.executeUpdate();
+            success = updateRow >0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (preparedStatement != null){
+                    preparedStatement.close();
+                }
+                if (connection !=null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return success;
+    }
     @FunctionalInterface
     private interface PreparedStatementSetter {
         void setValues(PreparedStatement preparedStatement) throws SQLException;

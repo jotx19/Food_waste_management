@@ -4,6 +4,7 @@ import DAO.InventoryDAO;
 import DAOImpl.InventoryDAOImpl;
 import Models.Items;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -17,10 +18,16 @@ import javax.servlet.http.HttpServletResponse;
 public class InventoryServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");private InventoryDAO inventoryDAO;
+    private NotificationService notificationService;
 
     @Override
     public void init() {
-        inventoryDAO = new InventoryDAOImpl(); // Use the implementation class
+        inventoryDAO = new InventoryDAOImpl();
+        try {
+            notificationService = new NotificationService(); // Use the implementation class
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -40,10 +47,13 @@ public class InventoryServlet extends HttpServlet {
                 forwardInventory(request, response, "Update.jsp");
                 break;
             case "delete":
-                forwardInventory(request, response, "");
+                forwardInventory(request, response, "Delete.jsp");
                 break;
             case "viewSurplus":
                 forwardToPage(request, response, "SurplusItem.jsp");
+                break;
+            case "claim":
+                forwardInventory(request, response, "Claim-charity.jsp");
                 break;
             default:
                 forwardToPage(request, response, "InventoryItem.jsp");
@@ -71,9 +81,14 @@ public class InventoryServlet extends HttpServlet {
                     case "viewSurplus":
                         viewSurplusInventory(request, response);
                         break;
+                    case "claim":
+                        claimFood(request, response);
+                        break;
                 }
             } catch (IOException | ParseException e) {
                 response.sendRedirect("Error.jsp");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -91,7 +106,7 @@ public class InventoryServlet extends HttpServlet {
     }
 
     private void addInventory(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ParseException {
+            throws IOException, ParseException, SQLException {
         Items newItem = new Items();
         newItem.setItemName(request.getParameter("itemName"));
         newItem.setQuantity(Integer.parseInt(request.getParameter("quantity")));
@@ -102,6 +117,7 @@ public class InventoryServlet extends HttpServlet {
         newItem.setDiscountPrice(Double.parseDouble(request.getParameter("discountPrice")));
 
         boolean itemAdded = inventoryDAO.addItem(newItem);
+        notificationService.sendNotifications(newItem);
         response.sendRedirect(itemAdded ? "Inventory-retailer.jsp" : "Failed.jsp");
     }
 
@@ -139,6 +155,18 @@ public class InventoryServlet extends HttpServlet {
             int surplusItemId = Integer.parseInt(request.getParameter("itemId"));
             boolean surplusSuccess = inventoryDAO.flagSurplusItem(surplusItemId);
             response.sendRedirect(surplusSuccess ? "SurplusItem.jsp" : "Error.jsp");
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            response.sendRedirect("Error.jsp");
+        }
+    }   
+    
+    private void claimFood(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        try {
+            int itemId = Integer.parseInt(request.getParameter("itemId"));
+            boolean claimSuccess = inventoryDAO.claimItem(itemId);
+            response.sendRedirect(claimSuccess ? "ClaimSuccess.jsp" : "ClaimFailure.jsp");
         } catch (NumberFormatException e) {
             e.printStackTrace();
             response.sendRedirect("Error.jsp");
