@@ -26,6 +26,9 @@ public class LoginServlet extends HttpServlet {
         if (userType != null) {
             HttpSession session = request.getSession();
             session.setAttribute("userType", userType);
+            session.setAttribute("email", email);
+            String userID = getuserID(email, password);
+            session.setAttribute("userID", userID);
 
             String targetPage;
             switch (userType.toLowerCase()) {
@@ -75,6 +78,31 @@ public class LoginServlet extends HttpServlet {
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     return resultSet.getString("userType");
+                } else {
+                    System.out.println("User not found: " + email);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private String getuserID(String email, String password) {
+        try (Connection connection = DBconnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT userID FROM Users WHERE email = ? AND password = ?")) {
+
+            if (connection == null) {
+                System.err.println("Failed to obtain database connection");
+                return null;
+            }
+
+            statement.setString(1, email);
+            statement.setString(2, password);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getString("userID");
                 } else {
                     System.out.println("User not found: " + email);
                 }

@@ -4,6 +4,7 @@ import DAO.InventoryDAO;
 import DAOImpl.InventoryDAOImpl;
 import Models.Items;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -17,10 +18,16 @@ import javax.servlet.http.HttpServletResponse;
 public class InventoryServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");private InventoryDAO inventoryDAO;
+    private NotificationService notificationService;
 
     @Override
     public void init() {
-        inventoryDAO = new InventoryDAOImpl(); // Use the implementation class
+        inventoryDAO = new InventoryDAOImpl();
+        try {
+            notificationService = new NotificationService(); // Use the implementation class
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -74,6 +81,8 @@ public class InventoryServlet extends HttpServlet {
                 }
             } catch (IOException | ParseException e) {
                 response.sendRedirect("Error.jsp");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -91,7 +100,7 @@ public class InventoryServlet extends HttpServlet {
     }
 
     private void addInventory(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ParseException {
+            throws IOException, ParseException, SQLException {
         Items newItem = new Items();
         newItem.setItemName(request.getParameter("itemName"));
         newItem.setQuantity(Integer.parseInt(request.getParameter("quantity")));
@@ -102,6 +111,7 @@ public class InventoryServlet extends HttpServlet {
         newItem.setDiscountPrice(Double.parseDouble(request.getParameter("discountPrice")));
 
         boolean itemAdded = inventoryDAO.addItem(newItem);
+        notificationService.sendNotifications(newItem);
         response.sendRedirect(itemAdded ? "Inventory-retailer.jsp" : "Failed.jsp");
     }
 

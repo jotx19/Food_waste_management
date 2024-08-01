@@ -67,6 +67,7 @@ CREATE TABLE Subscriptions (
     SubscriptionID INT AUTO_INCREMENT PRIMARY KEY,
     UserID INT,
     CommunicationMethod ENUM('email', 'phone') NOT NULL,
+    Email VARCHAR(255),
     Location VARCHAR(255),
     FoodPreferences VARCHAR(255),
     FOREIGN KEY (UserID) REFERENCES Users(UserID)
