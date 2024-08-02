@@ -8,8 +8,26 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * The UserDAOImpl class implements the UserDAO interface,
+ * providing the functionality to manage user data, including
+ * user registration within the system.
+ */
 public class UserDAOImpl implements UserDAO {
 
+    /**
+     * Registers a new user in the system.
+     *
+     * This method inserts the provided user information into the
+     * database and returns the generated user ID if the registration
+     * is successful. It utilizes a PreparedStatement to execute
+     * the SQL insertion query and retrieve the generated key.
+     *
+     * @param user The userdto object representing the user to be registered.
+     * @return An integer representing the ID of the newly registered user,
+     *         or 0 if the registration failed or no user ID was generated.
+     * @throws SQLException if a database access error occurs during the registration process.
+     */
     @Override
     public int registerUser(userdto user) throws SQLException {
         Connection connection = null;

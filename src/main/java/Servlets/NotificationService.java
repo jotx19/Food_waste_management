@@ -1,3 +1,8 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+
 package Servlets;
 
 import DB.DBconnection;
@@ -8,32 +13,40 @@ import DAOImpl.SubscriptionDAOImpl;
 
 import java.sql.SQLException;
 import java.util.List;
-
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
 import java.util.Properties;
 import java.util.Date;
 
-
+/**
+ * The `NotificationService` class handles sending notifications to users based on their subscriptions.
+ * Notifications are sent via email when a new inventory item matches a user's preferences and location.
+ *
+ * <p>This class uses the `SubscriptionDAO` to retrieve all subscriptions and sends email notifications based on item details.
+ * It supports sending notifications for surplus items (those nearing their expiration date) and can handle multiple modes of communication (though currently only email is implemented).</p>
+ *
+ * <p>The `sendEmail` method is used to send emails via an SMTP server.</p>
+ *
+ * @author YourName
+ */
 public class NotificationService {
     private SubscriptionDAO subscriptionDAO;
 
+    /**
+     * Initializes the `NotificationService` with a `SubscriptionDAO` instance.
+     *
+     * @throws SQLException If there is an error obtaining the database connection.
+     */
     public NotificationService() throws SQLException {
         subscriptionDAO = new SubscriptionDAOImpl(DBconnection.getConnection()); // Initialize with your DAO implementation
     }
 
-    public void TestsendNotifications(Items item) throws SQLException {
-        List<Subscription> subscriptions = subscriptionDAO.getAllSubscriptions();
-
-        for (Subscription subscription : subscriptions) {
-            String message = "New inventory item added: " + item.getItemName() + " at a discount price of " + item.getDiscountPrice();
-            if ("email".equals(subscription.getmoc())) {
-                sendEmail(subscription.getEmail(), "New Inventory Item", message);
-            } else if ("phone".equals(subscription.getmoc())) {
-            }
-        }
-    }
-
+    /**
+     * Sends notifications for a new inventory item based on user subscriptions.
+     *
+     * @param item The `Items` object containing details of the new inventory item.
+     * @throws SQLException If there is an error retrieving subscriptions from the database.
+     */
     public void sendNotifications(Items newItem) throws SQLException {
         // Retrieve all subscriptions
         List<Subscription> subscriptions = subscriptionDAO.getAllSubscriptions();
@@ -43,13 +56,12 @@ public class NotificationService {
         Date oneWeekFromNow = new Date(currentDate.getTime() + (7L * 24 * 60 * 60 * 1000));
         boolean isSurplus = !newItem.getExpirationDate().before(currentDate) && !newItem.getExpirationDate().after(oneWeekFromNow);
 
-        // check if new item is surplus or not
+        // Check if the new item is surplus
         if (isSurplus) {
             // Iterate over each subscription
             for (Subscription subscription : subscriptions) {
                 // Check if the subscription's location and food preferences match the new item
-                boolean locationMatches = true;
-//            boolean locationMatches = subscription.getLocation().equalsIgnoreCase(newItem.getLocation());
+                boolean locationMatches = true; // Placeholder for location check
                 boolean foodPreferencesMatch = subscription.getFoodPreferences().contains(newItem.getItemName());
 
                 // If the subscription's location and food preferences match the new item, send the notification
@@ -66,8 +78,7 @@ public class NotificationService {
                             newItem.getExpirationDate(),
                             newItem.getRetailerPrice(),
                             newItem.getDiscountPrice(),
-                            "Location"
-//                        newItem.getLocation()
+                            "Location" // Placeholder for actual location
                     );
 
                     // Call the method to send the email
@@ -77,6 +88,13 @@ public class NotificationService {
         }
     }
 
+    /**
+     * Sends an email notification using SMTP.
+     *
+     * @param recipient The email address of the recipient.
+     * @param subject The subject of the email.
+     * @param messageText The body of the email.
+     */
     public static void sendEmail(String recipient, String subject, String messageText) {
         // SMTP server configuration
         String host = "smtp-mail.outlook.com";
@@ -121,7 +139,5 @@ public class NotificationService {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-
-
     }
 }

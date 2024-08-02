@@ -14,12 +14,29 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * The `InventoryServlet` class handles HTTP requests related to inventory management.
+ * It supports actions such as adding, updating, deleting, viewing surplus, and claiming inventory items.
+ * This servlet is responsible for processing both GET and POST requests and forwarding to the appropriate JSP pages or performing database operations.
+ *
+ * <p>On GET requests, the servlet determines the action based on the request parameter and forwards the user to the corresponding JSP page.
+ * On POST requests, it performs the action specified by the request parameter, interacts with the database via DAO methods, and redirects the user to appropriate pages based on the outcome of the operation.</p>
+ *
+ * <p>The servlet uses an `InventoryDAO` for interacting with the database and a `NotificationService` to handle notifications related to inventory changes.</p>
+ *
+ */
 @WebServlet("/InventoryServlet")
 public class InventoryServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");private InventoryDAO inventoryDAO;
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private InventoryDAO inventoryDAO;
     private NotificationService notificationService;
 
+    /**
+     * Initializes the servlet, setting up DAO and notification service instances.
+     *
+     * @throws RuntimeException If there is an error initializing the notification service.
+     */
     @Override
     public void init() {
         inventoryDAO = new InventoryDAOImpl();
@@ -30,6 +47,14 @@ public class InventoryServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Handles HTTP GET requests by forwarding to the appropriate JSP page based on the action parameter.
+     *
+     * @param request The `HttpServletRequest` object that contains the request data.
+     * @param response The `HttpServletResponse` object used to send a response to the client.
+     * @throws ServletException If an input or output error is detected when the servlet handles the request.
+     * @throws IOException If an error occurs while sending the response.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -61,6 +86,14 @@ public class InventoryServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Handles HTTP POST requests by performing actions such as adding, updating, deleting, viewing surplus, or claiming inventory items.
+     *
+     * @param request The `HttpServletRequest` object that contains the request data.
+     * @param response The `HttpServletResponse` object used to send a response to the client.
+     * @throws ServletException If an input or output error is detected when the servlet handles the request.
+     * @throws IOException If an error occurs while sending the response.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -93,11 +126,29 @@ public class InventoryServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Forwards the request to a specified JSP page.
+     *
+     * @param request The `HttpServletRequest` object that contains the request data.
+     * @param response The `HttpServletResponse` object used to send a response to the client.
+     * @param page The JSP page to forward to.
+     * @throws ServletException If an input or output error is detected when forwarding the request.
+     * @throws IOException If an error occurs while sending the response.
+     */
     private void forwardToPage(HttpServletRequest request, HttpServletResponse response, String page)
             throws ServletException, IOException {
         request.getRequestDispatcher(page).forward(request, response);
     }
 
+    /**
+     * Forwards the request to a specified inventory management JSP page with the current inventory data.
+     *
+     * @param request The `HttpServletRequest` object that contains the request data.
+     * @param response The `HttpServletResponse` object used to send a response to the client.
+     * @param page The JSP page to forward to.
+     * @throws ServletException If an input or output error is detected when forwarding the request.
+     * @throws IOException If an error occurs while sending the response.
+     */
     private void forwardInventory(HttpServletRequest request, HttpServletResponse response, String page)
             throws ServletException, IOException {
         List<Items> inventory = inventoryDAO.getInventory();
@@ -105,6 +156,15 @@ public class InventoryServlet extends HttpServlet {
         forwardToPage(request, response, page);
     }
 
+    /**
+     * Adds a new inventory item based on request parameters.
+     *
+     * @param request The `HttpServletRequest` object that contains the request data.
+     * @param response The `HttpServletResponse` object used to send a response to the client.
+     * @throws IOException If an error occurs while sending the response.
+     * @throws ParseException If there is an error parsing date.
+     * @throws SQLException If a database access error occurs.
+     */
     private void addInventory(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ParseException, SQLException {
         Items newItem = new Items();
@@ -121,6 +181,14 @@ public class InventoryServlet extends HttpServlet {
         response.sendRedirect(itemAdded ? "Inventory-retailer.jsp" : "Failed.jsp");
     }
 
+    /**
+     * Updates an existing inventory item based on request parameters.
+     *
+     * @param request The `HttpServletRequest` object that contains the request data.
+     * @param response The `HttpServletResponse` object used to send a response to the client.
+     * @throws IOException If an error occurs while sending the response.
+     * @throws ParseException If there is an error parsing date.
+     */
     private void updateInventory(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ParseException {
         int itemId = Integer.parseInt(request.getParameter("itemId"));
@@ -137,6 +205,13 @@ public class InventoryServlet extends HttpServlet {
         response.sendRedirect(updateSuccess ? "Inventory-retailer.jsp" : "Error.jsp");
     }
 
+    /**
+     * Deletes an existing inventory item based on request parameters.
+     *
+     * @param request The `HttpServletRequest` object that contains the request data.
+     * @param response The `HttpServletResponse` object used to send a response to the client.
+     * @throws IOException If an error occurs while sending the response.
+     */
     private void deleteInventory(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         try {
@@ -149,6 +224,13 @@ public class InventoryServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Flags an inventory item as surplus based on request parameters.
+     *
+     * @param request The `HttpServletRequest` object that contains the request data.
+     * @param response The `HttpServletResponse` object used to send a response to the client.
+     * @throws IOException If an error occurs while sending the response.
+     */
     private void viewSurplusInventory(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         try {
@@ -159,8 +241,15 @@ public class InventoryServlet extends HttpServlet {
             e.printStackTrace();
             response.sendRedirect("Error.jsp");
         }
-    }   
-    
+    }
+
+    /**
+     * Claims an inventory item for charity based on request parameters.
+     *
+     * @param request The `HttpServletRequest` object that contains the request data.
+     * @param response The `HttpServletResponse` object used to send a response to the client.
+     * @throws IOException If an error occurs while sending the response.
+     */
     private void claimFood(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         try {

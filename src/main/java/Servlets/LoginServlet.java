@@ -18,10 +18,30 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * The `LoginServlet` class handles HTTP requests for user authentication.
+ * It processes login requests, authenticates users based on their email and password, and redirects users to the appropriate page based on their user type.
+ * It also handles logout requests by invalidating the current session and redirecting the user to the login page.
+ *
+ * <p>On POST requests, the servlet extracts user credentials from the request, authenticates the user, and forwards the user to a page based on their role (retailer, charity, or consumer).
+ * On GET requests, it invalidates the current session and redirects the user to the login page.</p>
+ *
+ * <p>The servlet uses the `DBconnection` class to obtain a connection to the database and perform authentication queries.</p>
+ *
+ * @author YourName
+ */
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Handles HTTP POST requests for user login.
+     *
+     * @param request The `HttpServletRequest` object that contains the request data.
+     * @param response The `HttpServletResponse` object used to send a response to the client.
+     * @throws ServletException If an input or output error is detected when the servlet handles the request.
+     * @throws IOException If an error occurs while sending the response.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String email = request.getParameter("email");
@@ -32,7 +52,7 @@ public class LoginServlet extends HttpServlet {
             HttpSession session = request.getSession();
             session.setAttribute("userType", userType);
             session.setAttribute("email", email);
-            String userID = getuserID(email, password);
+            String userID = getUserID(email, password);
             session.setAttribute("userID", userID);
 
             String targetPage;
@@ -61,6 +81,15 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Handles HTTP GET requests for user logout.
+     * Invalidates the current session and redirects the user to the login page.
+     *
+     * @param request The `HttpServletRequest` object that contains the request data.
+     * @param response The `HttpServletResponse` object used to send a response to the client.
+     * @throws ServletException If an input or output error is detected when the servlet handles the request.
+     * @throws IOException If an error occurs while sending the response.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
@@ -68,6 +97,13 @@ public class LoginServlet extends HttpServlet {
         response.sendRedirect("login.jsp");
     }
 
+    /**
+     * Authenticates a user by checking the provided email and password against the database.
+     *
+     * @param email The email address of the user.
+     * @param password The password of the user.
+     * @return The user type if authentication is successful, or null if authentication fails.
+     */
     private String authenticateUser(String email, String password) {
         try (Connection connection = DBconnection.getConnection();
              PreparedStatement statement = connection.prepareStatement("SELECT userType FROM Users WHERE email = ? AND password = ?")) {
@@ -93,7 +129,14 @@ public class LoginServlet extends HttpServlet {
         return null;
     }
 
-    private String getuserID(String email, String password) {
+    /**
+     * Retrieves the user ID of the user by checking the provided email and password against the database.
+     *
+     * @param email The email address of the user.
+     * @param password The password of the user.
+     * @return The user ID if found, or null if no user is found.
+     */
+    private String getUserID(String email, String password) {
         try (Connection connection = DBconnection.getConnection();
              PreparedStatement statement = connection.prepareStatement("SELECT userID FROM Users WHERE email = ? AND password = ?")) {
 

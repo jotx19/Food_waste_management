@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DB;
 
 import java.io.FileInputStream;
@@ -11,6 +7,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/**
+ * The DBconnection class is responsible for managing database connections.
+ * It loads database configuration properties, initializes the JDBC driver,
+ * and provides methods for obtaining and closing database connections.
+ */
 public class DBconnection {
     private static final Properties properties = new Properties();
 
@@ -23,14 +24,31 @@ public class DBconnection {
         }
     }
 
+    /**
+     * Retrieves a connection to the database using the properties loaded from the configuration file.
+     *
+     * This method uses the JDBC DriverManager to establish a connection to the database with the
+     * URL, username, and password specified in the properties file.
+     *
+     * @return A Connection object representing the database connection.
+     * @throws SQLException if a database access error occurs or the URL is invalid.
+     */
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(
-            properties.getProperty("jdbc.url"),
-            properties.getProperty("jdbc.username"),
-            properties.getProperty("jdbc.password")
+                properties.getProperty("jdbc.url"),
+                properties.getProperty("jdbc.username"),
+                properties.getProperty("jdbc.password")
         );
     }
 
+    /**
+     * Closes the provided database connection.
+     *
+     * This method ensures that the connection is closed properly, releasing any database resources
+     * associated with it. If an error occurs while closing the connection, it is logged to the console.
+     *
+     * @param connection The Connection object to be closed. If it is null, no action is taken.
+     */
     public static void closeConnection(Connection connection) {
         if (connection != null) {
             try {
