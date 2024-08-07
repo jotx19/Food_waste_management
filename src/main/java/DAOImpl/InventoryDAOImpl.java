@@ -127,6 +127,41 @@ public class InventoryDAOImpl implements InventoryDAO {
         stat.setDouble(7, item.getDiscountPrice());
     }
 
+    @Override
+public boolean claimItem(int itemId, int requestedQuantity) {
+    Connection connection = null;
+    PreparedStatement preparedStatement = null;
+    boolean success = false;
+    try {
+        connection = DBconnection.getConnection();
+        String updateQuery = "UPDATE Inventory SET Quantity = Quantity - ? WHERE ItemID = ? AND Quantity >= ?";
+        preparedStatement = connection.prepareStatement(updateQuery);
+        preparedStatement.setInt(1, requestedQuantity);
+        preparedStatement.setInt(2, itemId);
+        preparedStatement.setInt(3, requestedQuantity);
+        int updateRow = preparedStatement.executeUpdate();
+        success = updateRow > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+    } finally {
+        try {
+            if (preparedStatement != null) {
+                preparedStatement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    return success;
+}
+
+@Override
+    public boolean claimItem(int itemId){
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     @FunctionalInterface
     private interface PreparedStatementSetter {
         void setValues(PreparedStatement preparedStatement) throws SQLException;

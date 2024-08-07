@@ -1,3 +1,9 @@
+<%-- 
+    Document   : SurplusItem
+    Created on : Jul. 24, 2024, 3:46:43 p.m.
+    Author     : 14375
+--%>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*"%>
@@ -139,7 +145,7 @@
             Statement st = null;
             ResultSet rs = null;
             try {
-                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/fwrp", "root", "root");
+                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/fwrp", "root", "477Azadeh936@");
                 st = connection.createStatement();
                 String query = "SELECT * FROM Inventory WHERE IsDonation = 1 OR IsSale = 1";
                 rs = st.executeQuery(query);

@@ -1,3 +1,9 @@
+<%-- 
+    Document   : ClaimFailure
+    Created on : Jul. 24, 2024, 3:46:43 p.m.
+    Author     : 14375
+--%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>

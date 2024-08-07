@@ -203,7 +203,7 @@
             ResultSet result = null;
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {
-                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/fwrp", "root", "root");
+                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/fwrp", "root", "477Azadeh936@");
                 stat = connection.createStatement();
                 String query = "SELECT * FROM Inventory";
                 result = stat.executeQuery(query);

@@ -44,7 +44,7 @@ public class ConsumerServlet extends HttpServlet {
 
         try {
             // Establish database connection
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/fwrp", "root", "root");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/fwrp", "root", "477Azadeh936@");
 
             // Decrease inventory quantity
             success = quantity(connection, itemId);

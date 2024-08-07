@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package DB;
 
 import java.io.FileInputStream;
@@ -11,7 +15,7 @@ public class DBconnection {
     private static final Properties properties = new Properties();
 
     static {
-        try (FileInputStream input = new FileInputStream("C:/Users/14375/Documents/NetBeansProjects/WebApplication/data/database.properties")) {
+        try (FileInputStream input = new FileInputStream("C:/Users/LENOVO/Desktop/java/Food_waste_management/data/database.properties")) {
             properties.load(input);
             Class.forName(properties.getProperty("jdbc.driverClassName"));
         } catch (IOException | ClassNotFoundException e) {

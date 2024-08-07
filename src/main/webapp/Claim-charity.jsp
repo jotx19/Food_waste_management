@@ -1,3 +1,9 @@
+<%-- 
+    Document   : Claim-Charity
+    Created on : Aug. 1, 2024, 3:46:12 p.m.
+    Author     : 14375
+--%>
+
 <%@page import="java.sql.SQLException"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="java.util.Date"%>
@@ -162,6 +168,7 @@
                     <form action="InventoryServlet" method="post">
                         <input type="hidden" name="action" value="claim">
                         <input type="hidden" name="itemId" value="<%=result.getString("ItemID")%>">
+                        <input type="number" name="requestedQuantity" min="1" max="<%=result.getInt("Quantity")%>" required>
                         <button type="submit" class="button">Claim</button>
                     </form>
                 </td>
