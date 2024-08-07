@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Servlets;
 
 import DAO.InventoryDAO;
@@ -65,6 +61,7 @@ public class InventoryServlet extends HttpServlet {
         }
     }
 
+    //processes the form submission
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -164,16 +161,18 @@ public class InventoryServlet extends HttpServlet {
             response.sendRedirect("Error.jsp");
         }
     }   
-    
+    //Add the new claimFood method here
     private void claimFood(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        try {
-            int itemId = Integer.parseInt(request.getParameter("itemId"));
-            boolean claimSuccess = inventoryDAO.claimItem(itemId);
-            response.sendRedirect(claimSuccess ? "ClaimSuccess.jsp" : "ClaimFailure.jsp");
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            response.sendRedirect("Error.jsp");
-        }
+        throws IOException {
+    try {
+        int itemId = Integer.parseInt(request.getParameter("itemId"));
+        int requestedQuantity = Integer.parseInt(request.getParameter("requestedQuantity"));
+        
+        boolean claimSuccess = inventoryDAO.claimItem(itemId, requestedQuantity);
+        response.sendRedirect(claimSuccess ? "ClaimSuccess.jsp" : "ClaimFailure.jsp");
+    } catch (NumberFormatException e) {
+        e.printStackTrace();
+        response.sendRedirect("Error.jsp");
     }
+}
 }

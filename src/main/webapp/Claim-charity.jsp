@@ -168,6 +168,7 @@
                     <form action="InventoryServlet" method="post">
                         <input type="hidden" name="action" value="claim">
                         <input type="hidden" name="itemId" value="<%=result.getString("ItemID")%>">
+                        <input type="number" name="requestedQuantity" min="1" max="<%=result.getInt("Quantity")%>" required>
                         <button type="submit" class="button">Claim</button>
                     </form>
                 </td>
