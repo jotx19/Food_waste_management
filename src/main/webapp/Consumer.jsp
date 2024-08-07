@@ -16,7 +16,7 @@
         }
 
         .header {
-            margin:2px;
+            margin: 2px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -59,13 +59,12 @@
         }
 
         .container {
-            margin: 80px auto 20px auto; 
+            margin: 80px auto 20px auto;
             max-width: 100%;
             padding: 20px;
             background-color: #fff;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            /*overflow-x: auto;  Handles horizontal overflow */
         }
 
         .container h1 {
@@ -117,16 +116,23 @@
             color:black;
         }
 
+        .quantity-input {
+            border: 1px solid #ddd;
+            border-radius: 50px;
+            padding: 5px;
+            width: 60px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
         .footer {
             display: flex;
             justify-content: center;
-            /*gap: 10px;*/
             padding: 15px;
             position: fixed;
             bottom: 0;
             width: 100%;
             align-items: center;
-/*            left: 0;*/
         }
 
         .footer a {
@@ -207,7 +213,8 @@
                 <form id="purchaseForm<%=rs.getString(1)%>" action="CustomerServlet" method="post">
                     <input type="hidden" name="action" value="purchase">
                     <input type="hidden" name="itemId" value="<%=rs.getString(1)%>">
-                    <button type="button" class="purchase-button" onclick="purchaseItem('<%=rs.getString(1)%>')">Purchase</button>
+                    <input type="number" name="quantity" min="1" value="1" class="quantity-input" required>
+                    <button type="submit" class="purchase-button">Purchase</button>
                 </form>
             </td>
         </tr>
@@ -226,14 +233,6 @@
 <div class="footer">
     <a href="Subscription.jsp" class="subscription-button">Subscribe</a>
 </div>
-
-<script>
-    function purchaseItem(itemId) {
-        var form = document.getElementById("purchaseForm" + itemId);
-        form.submit();
-        alert("Your purchase was successful!");
-    }
-</script>
 
 </body>
 </html>

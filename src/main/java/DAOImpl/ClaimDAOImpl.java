@@ -8,13 +8,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+/**
+ * Implementation of the ClaimDAO interface for managing claim data in the Food Waste Reduction Platform.
+ * This class provides concrete implementations for adding, updating, and querying claims in the database.
+ */
 public class ClaimDAOImpl implements ClaimDAO {
     private final Connection connection;
 
+    /**
+     * Constructs a new ClaimDAOImpl with the specified database connection.
+     *
+     * @param connection The database connection to be used for claim operations.
+     */
     public ClaimDAOImpl(Connection connection) {
         this.connection = connection;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean addClaim(Claims claim) {
         String query = "INSERT INTO Claims (ItemID, ClaimDate, QuantityClaimed) VALUES (?, ?, ?)";
@@ -30,6 +42,9 @@ public class ClaimDAOImpl implements ClaimDAO {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean addOrUpdate(Claims claim) {
         if (existingClaim(claim.getItemId())) {
@@ -41,6 +56,9 @@ public class ClaimDAOImpl implements ClaimDAO {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean existingClaim(int itemId) {
         String query = "SELECT COUNT(*) AS count FROM Claims WHERE ItemID = ?";
@@ -58,6 +76,9 @@ public class ClaimDAOImpl implements ClaimDAO {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean updateQuantity(int itemId, int quantityClaimed) {
         String query = "UPDATE Claims SET QuantityClaimed = ? WHERE ItemID = ?";
@@ -72,6 +93,9 @@ public class ClaimDAOImpl implements ClaimDAO {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getQuantityClaimed(int itemId) {
         int quantityClaimed = 0;

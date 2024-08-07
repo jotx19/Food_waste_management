@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Implementation of the InventoryDAO interface for managing inventory data in the Food Waste Reduction Platform.
+ * This class provides concrete implementations for retrieving, adding, updating, and deleting inventory items,
+ * as well as managing donation items and surplus inventory.
+ */
 public class InventoryDAOImpl implements InventoryDAO {
     // SQL queries
     private static final String SELECT_INVERYID = "SELECT * FROM Inventory WHERE ItemID = ?";
@@ -22,11 +27,17 @@ public class InventoryDAOImpl implements InventoryDAO {
     private static final String UPDATE_QUANTITY = "UPDATE Inventory SET Quantity = ? WHERE ItemID = ?";
     private static final String DECREASE_QUANTITY = "UPDATE Inventory SET Quantity = Quantity - 1 WHERE ItemID = ? AND Quantity > 0";
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Items> getInventory() {
         return executeQuery(SELECT_INVERYID);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean addItem(Items item) {
         return executeUpdate(INSERT, ps -> {
@@ -34,6 +45,9 @@ public class InventoryDAOImpl implements InventoryDAO {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean updateItem(int itemId, String newItemName, int newQuantity, Date newExpirationDate, double newRetailerPrice, boolean newIsDonation, boolean newIsSale, double newDiscountPrice) {
         return executeUpdate(UPDATE, ps -> {
@@ -48,21 +62,33 @@ public class InventoryDAOImpl implements InventoryDAO {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean deleteItem(int itemId) {
         return executeUpdate(DELETE, ps -> ps.setInt(1, itemId));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Items> getDonationItems() {
         return executeQuery(DONATION_ITEM);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean flagSurplusItem(int surplusItemId) {
         return executeUpdate(SURPLUS_ITEM, ps -> ps.setInt(1, surplusItemId));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean updateQuantity(int itemId, int newQuantity) {
         return executeUpdate(UPDATE_QUANTITY, ps -> {
@@ -71,11 +97,20 @@ public class InventoryDAOImpl implements InventoryDAO {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean decreaseQuantity(int itemId) {
         return executeUpdate(DECREASE_QUANTITY, ps -> ps.setInt(1, itemId));
     }
 
+    /**
+     * Executes a SQL query and maps the result to a list of Items.
+     *
+     * @param query The SQL query to execute.
+     * @return A List of Items resulting from the query.
+     */
     private List<Items> executeQuery(String query) {
         List<Items> items = new ArrayList<>();
         try (Connection connection = DBconnection.getConnection();
@@ -91,6 +126,13 @@ public class InventoryDAOImpl implements InventoryDAO {
         return items;
     }
 
+    /**
+     * Executes a SQL update statement.
+     *
+     * @param query The SQL update query to execute.
+     * @param pss A functional interface to set values in the PreparedStatement.
+     * @return true if the update was successful, false otherwise.
+     */
     private boolean executeUpdate(String query, PreparedStatementSetter pss) {
         try (Connection connection = DBconnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -104,6 +146,13 @@ public class InventoryDAOImpl implements InventoryDAO {
         }
     }
 
+    /**
+     * Maps a ResultSet to an Items object.
+     *
+     * @param resultSet The ResultSet containing item data.
+     * @return An Items object populated with data from the ResultSet.
+     * @throws SQLException if a database access error occurs.
+     */
     private Items mapResultSetToItem(ResultSet resultSet) throws SQLException {
         Items item = new Items();
         item.setItemId(resultSet.getInt("ItemID"));
@@ -117,6 +166,13 @@ public class InventoryDAOImpl implements InventoryDAO {
         return item;
     }
 
+    /**
+     * Sets the values of an Items object in a PreparedStatement.
+     *
+     * @param stat The PreparedStatement to set values in.
+     * @param item The Items object containing the values to set.
+     * @throws SQLException if a database access error occurs.
+     */
     private void setItemPreparedStatement(PreparedStatement stat, Items item) throws SQLException {
         stat.setString(1, item.getItemName());
         stat.setInt(2, item.getQuantity());
@@ -127,27 +183,30 @@ public class InventoryDAOImpl implements InventoryDAO {
         stat.setDouble(7, item.getDiscountPrice());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public boolean claimItem(int itemId){
+    public boolean claimItem(int itemId) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         boolean success = false;
         try {
             connection = DBconnection.getConnection();
-            // update inventory 
+            // update inventory
             String updateQuery ="UPDATE Inventory SET Quantity = Quantity - 1 WHERE ItemID = ? AND Quantity>0";
             preparedStatement = connection.prepareStatement(updateQuery);
             preparedStatement.setInt(1, itemId);
             int updateRow = preparedStatement.executeUpdate();
-            success = updateRow >0;
+            success = updateRow > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
-                if (preparedStatement != null){
+                if (preparedStatement != null) {
                     preparedStatement.close();
                 }
-                if (connection !=null) {
+                if (connection != null) {
                     connection.close();
                 }
             } catch (SQLException e) {
@@ -156,6 +215,10 @@ public class InventoryDAOImpl implements InventoryDAO {
         }
         return success;
     }
+
+    /**
+     * Functional interface for setting values in a PreparedStatement.
+     */
     @FunctionalInterface
     private interface PreparedStatementSetter {
         void setValues(PreparedStatement preparedStatement) throws SQLException;
