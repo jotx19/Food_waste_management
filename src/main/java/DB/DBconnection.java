@@ -15,7 +15,7 @@ public class DBconnection {
     private static final Properties properties = new Properties();
 
     static {
-        try (FileInputStream input = new FileInputStream("C:/Users/14375/Documents/NetBeansProjects/WebApplication/data/database.properties")) {
+        try (FileInputStream input = new FileInputStream("C:\\Users\\abala\\OneDrive\\Documents\\Desktop\\java\\Food_waste_management\\data\\database.properties")) {
             properties.load(input);
             Class.forName(properties.getProperty("jdbc.driverClassName"));
         } catch (IOException | ClassNotFoundException e) {
