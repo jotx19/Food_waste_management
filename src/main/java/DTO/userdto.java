@@ -1,23 +1,20 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package DTO;
-
-//import notificationSystem.NotificationService;
-
 public class userdto {
     private int userId;
     private String name;
     private String email;
     private String password;
     private Types userType;
-//    private boolean isSubscribe;
-//    private NotificationMethod notificationMethod;
-
-    // Constructor
+    
     public userdto(String name, String email, String password, Types userType) {
         this.name = name;
         this.email = email;
         this.password=password;
         this.userType = userType;
-        //this.isSubscribe=isSubscribe;
     }
 
     public userdto(String name, String email,Types userType) {
@@ -30,7 +27,6 @@ public class userdto {
     	
     }
 
-	// Getters and setters
     public int getUserId() {
         return userId;
     }
