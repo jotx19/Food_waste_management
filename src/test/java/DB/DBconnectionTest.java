@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DBconnectionTest {
 
@@ -18,7 +18,7 @@ public class DBconnectionTest {
         // Set up mock properties or configuration before any tests are run
         Properties mockProperties = new Properties();
         mockProperties.setProperty("jdbc.driverClassName", "com.mysql.cj.jdbc.Driver");
-        mockProperties.setProperty("jdbc.url", "jdbc:mysql://localhost:3306/frwp");
+        mockProperties.setProperty("jdbc.url", "jdbc:mysql://localhost:3306/fwrp");
         mockProperties.setProperty("jdbc.username", "root");
         mockProperties.setProperty("jdbc.password", "root");
         // Mock the FileInputStream or use a test configuration file
@@ -38,7 +38,7 @@ public class DBconnectionTest {
         } catch (SQLException e) {
             e.printStackTrace();
             // Fail the test if an exception is thrown
-            assertNull(e, "SQLException should not be thrown.");
+            assertTrue(false, "SQLException should not be thrown.");
         }
     }
 
@@ -48,12 +48,12 @@ public class DBconnectionTest {
         try {
             connection = DBconnection.getConnection();
             DBconnection.closeConnection(connection);
-            // If we reach here, the connection should be closed
-            assertNull(connection, "Connection should be closed.");
+            // Verify the connection is closed
+            assertTrue(connection.isClosed(), "Connection should be closed.");
         } catch (SQLException e) {
             e.printStackTrace();
             // Fail the test if an exception is thrown
-            assertNull(e, "SQLException should not be thrown.");
+            assertTrue(false, "SQLException should not be thrown.");
         }
     }
 }

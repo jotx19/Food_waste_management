@@ -22,28 +22,27 @@ public class ClaimDAOImplTest {
     public void setUp() throws SQLException {
         // Initialize the connection using DBconnection class
         connection = DBconnection.getConnection();
-        createTables();
         claimDAO = new ClaimDAOImpl(connection);
+        clearData();
+        insertTestData();
     }
 
     @AfterEach
     public void tearDown() throws SQLException {
+        clearData();
         if (connection != null && !connection.isClosed()) {
-            dropTables();
             connection.close();
         }
     }
 
-    private void createTables() throws SQLException {
-        String createTableSQL = "CREATE TABLE Claims (" +
-                "ClaimID INT AUTO_INCREMENT PRIMARY KEY, " +
-                "ItemID INT NOT NULL, " +
-                "ClaimDate TIMESTAMP NOT NULL, " +
-                "QuantityClaimed INT NOT NULL)";
+    private void clearData() throws SQLException {
+        String deleteClaimsSQL = "DELETE FROM Claims";
+        String deleteInventorySQL = "DELETE FROM inventory";
         Statement stmt = null;
         try {
             stmt = connection.createStatement();
-            stmt.execute(createTableSQL);
+            stmt.execute(deleteClaimsSQL);
+            stmt.execute(deleteInventorySQL);
         } finally {
             if (stmt != null) {
                 stmt.close();
@@ -51,12 +50,12 @@ public class ClaimDAOImplTest {
         }
     }
 
-    private void dropTables() throws SQLException {
-        String dropTableSQL = "DROP TABLE Claims";
+    private void insertTestData() throws SQLException {
+        String insertInventorySQL = "INSERT INTO inventory (ItemID, ItemName, Quantity) VALUES (1, 'Test Item', 100)";
         Statement stmt = null;
         try {
             stmt = connection.createStatement();
-            stmt.execute(dropTableSQL);
+            stmt.execute(insertInventorySQL);
         } finally {
             if (stmt != null) {
                 stmt.close();

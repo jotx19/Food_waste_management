@@ -9,8 +9,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserDAOImplTest {
@@ -21,55 +24,58 @@ public class UserDAOImplTest {
     public void setUp() throws SQLException {
         // Initialize the connection using DBconnection class
         connection = DBconnection.getConnection();
-        createTables();
         userDAO = new UserDAOImpl();
+
+        // Prepare test data
+        clearTestData();
+        insertTestData();
     }
 
     @AfterEach
     public void tearDown() throws SQLException {
         if (connection != null && !connection.isClosed()) {
-            dropTables();
+            // Clean up test data
+            clearTestData();
             connection.close();
         }
     }
 
-    private void createTables() throws SQLException {
-        String createTableSQL = "CREATE TABLE Users (" +
-                "UserID INT AUTO_INCREMENT PRIMARY KEY, " +
-                "Name VARCHAR(255) NOT NULL, " +
-                "Email VARCHAR(255) UNIQUE NOT NULL, " +
-                "Password VARCHAR(255) NOT NULL, " +
-                "UserType VARCHAR(50) NOT NULL)";
-        Statement stmt = null;
-        try {
-            stmt = connection.createStatement();
-            stmt.execute(createTableSQL);
-        } finally {
-            if (stmt != null) {
-                stmt.close();
-            }
+    private void clearTestData() throws SQLException {
+        String deleteTestDataSQL = "DELETE FROM Users WHERE Email LIKE 'test_%@example.com'";
+        try (Statement stmt = connection.createStatement()) {
+            stmt.executeUpdate(deleteTestDataSQL);
         }
     }
 
-    private void dropTables() throws SQLException {
-        String dropTableSQL = "DROP TABLE Users";
-        Statement stmt = null;
-        try {
-            stmt = connection.createStatement();
-            stmt.execute(dropTableSQL);
-        } finally {
-            if (stmt != null) {
-                stmt.close();
-            }
+    private void insertTestData() throws SQLException {
+        String insertTestDataSQL = "INSERT INTO Users (Name, Email, Password, UserType) VALUES " +
+                "('Test User 1', 'test_user1@example.com', 'password1', 'consumer'), " +
+                "('Test User 2', 'test_user2@example.com', 'password2', 'retailer')";
+        try (Statement stmt = connection.createStatement()) {
+            stmt.executeUpdate(insertTestDataSQL);
         }
     }
 
     @Test
     public void testRegisterUser() throws SQLException {
-        userdto user = new userdto("Test User", "test@example.com", "password", Types.Consumer);
+        userdto user = new userdto("Test User", "test_new@example.com", "password", Types.Consumer);
         int userId = userDAO.registerUser(user);
         assertTrue(userId > 0, "User ID should be greater than 0.");
 
-        // Additional code to verify user registration can be added here
+        // Additional verification of user registration
+        assertTrue(isUserPresent("test_new@example.com"), "Newly registered user should exist in the database.");
+    }
+
+    private boolean isUserPresent(String email) throws SQLException {
+        String query = "SELECT COUNT(*) FROM Users WHERE Email = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, email);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
     }
 }
