@@ -190,7 +190,7 @@
         Statement st = null;
         ResultSet rs = null;
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/fwrp", "root", "root");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/fwrp", "root", "477Azadeh936@");
             st = connection.createStatement();
             String query = "SELECT * FROM Inventory WHERE isDonation = 0";
             rs = st.executeQuery(query);

@@ -149,7 +149,7 @@
             ResultSet result = null;
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {
-                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/fwrp", "root", "root");
+                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/fwrp", "root", "477Azadeh936@");
                 stat = connection.createStatement();
                 String query = "SELECT * FROM Inventory WHERE IsDonation = true";
                 result = stat.executeQuery(query);
@@ -168,6 +168,7 @@
                     <form action="InventoryServlet" method="post">
                         <input type="hidden" name="action" value="claim">
                         <input type="hidden" name="itemId" value="<%=result.getString("ItemID")%>">
+                        <input type="number" name="requestedQuantity" min="1" max="<%=result.getInt("Quantity")%>" required>
                         <button type="submit" class="button">Claim</button>
                     </form>
                 </td>

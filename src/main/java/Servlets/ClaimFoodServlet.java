@@ -1,3 +1,4 @@
+//This servlet will handle the claiming of food items by charitable organizations.
 package Servlets;
 
 import DAO.InventoryDAO;

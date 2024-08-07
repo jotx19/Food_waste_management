@@ -22,7 +22,7 @@ public class SubscribeServlet extends HttpServlet {
     public void init() {
         String jdbcURL = "jdbc:mysql://localhost/fwrp";
         String jdbcUsername = "root";
-        String jdbcPassword = "root";
+        String jdbcPassword = "477Azadeh936@";
         try {
             Connection connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
             subscriptionDAO = new SubscriptionDAOImpl(connection);
